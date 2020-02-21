@@ -16,7 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * This class is responsible to test the UserInterface using Selenium Grid concept
  */
 public class HomePageTests {
-  private static final Logger log = Logger.getLogger(UISeleniumGrid.class);
+  private static final Logger log = Logger.getLogger(HomePage.class);
   private static Wait<WebDriver> wait;
   private static DesiredCapabilities capabillities;
   private static WebDriver driver;

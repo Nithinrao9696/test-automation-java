@@ -1,33 +1,37 @@
-package tests;
+package basicsOfSelenium;
 
-import helper.Browser;
-import helper.TestHelper;
-import org.testng.annotations.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-/**
- * Created by opantsjoha on 02/07/2017.
- */
-public class HomePageTests extends TestHelper {
+import org.openqa.selenium.By;
+import org.openqa.selenium.Platform;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.annotations.Test;
 
-    Browser browser;
+public class ArrayDemo {
 
-    @Parameters({"browserName", "baseUrl"})
-    @BeforeClass(groups = {"web"})
-    public void setUp(String browserName, String baseUrl) {
-        browser = new Browser(browserName, baseUrl);
-        browser.navigateToBaseUrl();
-    }
+    @Test
 
-    @Test(groups = {"web"})
-    public void searchTest() throws InterruptedException {
-        browser.HomePage().HeaderSection().setSearchField("Cooking");
-        browser.HomePage().HeaderSection().clickOnSearchButton();
-        // todo: add assert
-    }
+    public void mailTest() throws MalformedURLException{
 
-    @AfterClass(groups = {"web"})
-    public void tearDown() {
-        browser._driver.quit();
-    }
+             DesiredCapabilities dr=null;
 
+             dr=DesiredCapabilities.firefox();
+
+             dr.setBrowserName("firefox");
+
+             dr.setPlatform(Platform.LINUX);
+
+             RemoteWebDriver driver=new RemoteWebDriver(new URL("http://ap-jenkdx-dev:4444/wd/hub"), dr);
+
+             driver.navigate().to("https://www.google.co.in");
+
+             driver.findElement(By.xpath("//*[@id='gs_htif0']")) .sendKeys("Search me");
+
+             driver.findElement(By.xpath("//*[@id='tsf']/div[2]/div[3]/center/input[1]")) .click();
+
+             driver.close();
+
+}
 }

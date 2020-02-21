@@ -1,53 +1,49 @@
-
-import static junit.framework.Assert.assertEquals;
-import java.net.URL;
-import org.apache.log4j.Logger;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+package ru.parsentev;
+ 
+import com.thoughtworks.selenium.DefaultSelenium;
+import com.thoughtworks.selenium.Selenium;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
+ 
+import java.net.MalformedURLException;
+import java.net.URL;
+ 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+ 
 /**
- * This class is responsible to test the UserInterface using Selenium Grid concept
+ * Tests for selenium standalone server.
+ * @author parsentev
+ * @since 19.11.2015
  */
 public class HomePageTests {
-  private static final Logger log = Logger.getLogger(HomePage.class);
-  private static Wait<WebDriver> wait;
-  private static DesiredCapabilities capabillities;
-  private static WebDriver driver;
-  @BeforeClass
-  public static void setUp() throws Exception {  
-    capabillities = DesiredCapabilities.firefox();
-    /** URL is the selenium hub URL here **/
-    driver = new RemoteWebDriver(new URL("http://ap-jenkdx-dev:4444/wd/hub"), capabillities);
-    capabillities.setBrowserName("firefox"); 
-    wait = new WebDriverWait(driver, 6000);
-  }
-  /**
-     * To test the UI
-     * @throws Exception
-     */
-  @Test
-  public void testUI() throws Exception {     
-    /** Your application URL which you want to test **/
-    driver.get("http://localhost:8090/myapp/index.html"); 
-    wait.until(new ExpectedCondition<Boolean>() {  
-      public Boolean apply(WebDriver webDriver) {     
-        log.info("Please be patience .... Searching ...");  
-        return webDriver.findElement(By.tagName("title")) != null;          
-      }         
-    });
-    log.info(driver.findElement(By.tagName("body")).getText());
-    assertEquals("URL must be http://localhost:8090/myapp/index.html", "http://localhost:8090/myapp/index.html", driver.getCurrentUrl());
-    /** put other asserts as well **/
-  }
-  @AfterClass
-  public static void tearDown() throws Exception {
-    driver.quit();  
-  }
+ 
+    @Test
+    public void executeFirefoxDriver() throws MalformedURLException {
+        this.execute(DesiredCapabilities.firefox());
+    }
+ 
+    @Test
+    public void executeChrome() throws MalformedURLException {
+        this.execute(DesiredCapabilities.chrome());
+    }
+ 
+    private void execute(final DesiredCapabilities capability) throws MalformedURLException {
+        WebDriver driver = new RemoteWebDriver(
+                new URL("http://ap-jenkdx-dev:4444/wd/hub"), capability
+        );
+        driver.get("http://www.javacodegeeks.com/");
+        WebElement element = driver.findElement(By.name("s"));
+        element.sendKeys("selenuim");
+        element.submit();
+        assertThat(
+                driver.getTitle(),
+                is("You searched for selenuim | Java Code Geeks")
+        );
+        driver.quit();
+    }
 }
